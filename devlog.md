@@ -28,4 +28,9 @@ Plan
    - Error cases (division by zero, leftover tokens, bad $n)
 6. Finish README and submit zipped repository.
 
+October, 23 2025 6:36 pm - Chanigng from Haskell to Racket and adding mode.rkt to project
+- Found out project is supposed to be in racket so have to pivot plan. 
+- Added mode.rkt code to my prokect1.rkt file
+
+
 
