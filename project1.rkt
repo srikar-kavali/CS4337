@@ -47,3 +47,49 @@
          [else #f])]))
   (loop 0 '()))  
 
+  ;; Evaluation Logic
+
+(define (history-lookup history n)
+    (if (and (integer? n) (>= n 1) (<= n (length history)))
+        (list-ref (reverse history) (sub1 n))
+        #f))
+
+(define (int-div a b)
+    (if (zero? b)
+        'div-by-zero
+        (exact->inexact (quotient (inexact->exact (truncate a))
+                                  (inexact->exact (truncate b))))))
+
+(define (eval-expr tokens history)
+  (cond
+    [(null? tokens) #f]
+    [else
+     (let ([tok (car tokens)]
+           [rest (cdr tokens)])
+       (match tok
+         [(cons 'num n) (list n rest)]
+         [(cons 'hist n)
+          (let ([val (history-lookup history n)])
+            (if val (list val rest) #f))]
+         ['neg
+          (let ([r (eval-expr rest history)])
+            (and r (list (- (car r)) (cadr r))))]
+         ['plus
+          (let* ([r1 (eval-expr rest history)]
+                 [r2 (and r1 (eval-expr (cadr r1) history))])
+            (and r1 r2 (list (+ (car r1) (car r2)) (cadr r2))))]
+         ['mult
+          (let* ([r1 (eval-expr rest history)]
+                 [r2 (and r1 (eval-expr (cadr r1) history))])
+            (and r1 r2 (list (* (car r1) (car r2)) (cadr r2))))]
+         ['div
+          (let* ([r1 (eval-expr rest history)]
+                 [r2 (and r1 (eval-expr (cadr r1) history))])
+            (and r1 r2
+                 (let ([v2 (car r2)])
+                   (if (zero? v2)
+                       #f
+                       (list (int-div (car r1) v2) (cadr r2))))))]
+         [_ #f]))]))
+
+
