@@ -92,4 +92,43 @@
                        (list (int-div (car r1) v2) (cadr r2))))))]
          [_ #f]))]))
 
+;;REPL loop
+(define (print-result id value)
+    (display (format "~a: " id))
+    (display (real->double-flonum value))
+    (newline))
+
+(define (print-error)
+    (displayln "Error: Invalid Expression"))
+
+(define (repl history)
+  (when interactive?
+    (display "> ")
+    (flush-output))
+  (define line (read-line))
+  (cond
+    [(eof-object? line) (void)]
+    [(string=? (string-trim line) "quit") (void)]
+    [else
+     (define tokens (string->tokens (string-trim line)))
+     (if (not tokens)
+         (begin (print-error)
+                (repl history))
+         (let ([res (eval-expr tokens history)])
+           (if (and res (null? (cadr res)))
+               (let* ([val (car res)]
+                      [new-hist (cons val history)]
+                      [id (length (reverse new-hist))])
+                 (print-result id val)
+                 (repl new-hist))
+               (begin (print-error)
+                      (repl history)))))]))
+
+
+;;Main entry
+(define (main)
+    (repl '()))
+
+(module+ main
+  (main))
 
