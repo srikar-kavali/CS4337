@@ -37,4 +37,17 @@ October 23, 2025 11:39 pm - Implementing tokenizer
 - I did this by scanning the string character by character and then builts the tokens manually.
 - I did run into some problems when trying to implement this. My first attempt, I ran into problem with the history references, Since I needed to grab all the digits after reading the '$' as one token. I first tried a nested loop which used an index to manually move through string, but it would get lost after the history reference. Another issue was when handling decimals. Because of this I had to use a smaller helper look whih append digits or single dots until I would hit a non-digit character. I also confused (cons 'num n) and (cons 'num n) which was super frustrating and confusing. 
 
+October 24, 2025 6:41 pm - Implementing Evaluator
+- Started working on evaluator, which is supposed to process a list of tokens and compute the result, while returning a pair '(list result remainig-tokens). I also have to do this recursively whihc was a bit more challenging to execute. For example, handling the errors like missing operands, dividing by 0, or invalid history references were all things I had to handle. 
+- Approach was
+If its a number, return (list number remaining-tokens)
+If its $n, fetch history
+If its and opertor like +, recursively evaluate the next two expressions
+If its a unary -, evaulate one expression and negate it
 
+- Struggles
+First issues were with returning the values. I had to use a list, but I kept forgetting to check if the result of the recursive call was #f (error) before ebery checking. I fixed this by having conditional checks.
+Another problem was integer division. Fixed this by truncating the operands before computing and then converting back to inexact. 
+Lastly for the history lookups, I first was indexing the history list directly, but it reversed the ordering since the newer results are at the front. I fixed this by reversing first then looking up the history. 
+
+- This was the most challenging part so far, because I had to make sure to use recursion which was more challenging and confusing at times. 
