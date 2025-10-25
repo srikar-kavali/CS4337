@@ -51,3 +51,17 @@ Another problem was integer division. Fixed this by truncating the operands befo
 Lastly for the history lookups, I first was indexing the history list directly, but it reversed the ordering since the newer results are at the front. I fixed this by reversing first then looking up the history. 
 
 - This was the most challenging part so far, because I had to make sure to use recursion which was more challenging and confusing at times. 
+
+October 24, 2025 10:21 pm - Implementing repl loop and main entry point. Finishing up project
+- Goal waws to read user input, evaluate it, print results, and keep track of the history of previous completions. Created a REPL loop (Read, evaluate, print loop ) which calls itself repeatdly with the updated history after every successful evaluation. 
+
+Plan
+- Display a prompt (">") in interactive mode
+- Read a line of input 
+- Trim and tokenize the line
+- Pass the token list to the evaluator
+- If expression is valid, print the result and store in history
+- If invalid, pint error and continue the loop
+
+Struggles
+- Had issues with calling the project, as the main function wasn't being called when Racket executed the file. Had to research about how Racket modules run, and switched to (module+ main (main)). After changing to this, the code was working. Finished up testing the project and now is ready for submission. 
